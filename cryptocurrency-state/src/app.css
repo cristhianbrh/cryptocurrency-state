@@ -1,0 +1,86 @@
+#superid
+{
+    background-color: white;
+    width: 70%;
+    height: 90vh;
+    margin: 5vh auto;
+
+    border-radius: 30px;
+
+    overflow: hidden;
+
+    box-shadow: 0 0 2px 2px rgba(168, 214, 195, 0.9);
+}
+
+#superid>.coin_actual {
+    background: rgb(19, 114, 75, .9);
+    text-align: center;
+    height: 60px;
+    padding-top: 13px;
+
+    color: #ffff;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+#superid>.coin_actual>img {
+    width: 40px;
+    margin-right: 20px;
+}
+#superid>.coin_actual>p {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+#superid>.coin_current_description
+{
+    padding: 12px;
+    height: 40%;
+}
+#superid>.coins
+{
+    padding-top: 10px;
+    height: 42%;
+}
+#superid>hr
+{
+    width: 90%;
+    margin: auto;
+}
+#superid>.coins>input
+{
+    width: 300px;
+    margin: auto;
+    margin-top: 10px;
+}
+#superid>.coins>.list_coins{
+    margin: auto;
+    margin-top: 12px;
+    overflow-y: scroll;
+    width: 98%;
+    height: 84%;
+}
+#superid>.coins>.list_coins>table
+{
+    width: 94%;
+    margin: auto;
+    /* text-align: center;  */
+} 
+#superid>.coins>.list_coins>table>tbody
+{
+    font-weight:100;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+} 
+#superid>.coins>.list_coins>table>tbody img
+{
+    width: 25px;
+} 
+#superid>.coins>.list_coins>table>tbody span
+{
+    margin-left: 20px;
+} 
+/* #superid>.coins>.list_coins>table>tbody .coin_name_ico
+{
+    text-align: left;
+}  */
