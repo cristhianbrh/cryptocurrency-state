@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/cryptocurrency-state/static/css/main.df178670.css",
+    "main.js": "/cryptocurrency-state/static/js/main.b76205af.js",
+    "static/media/background.jpg": "/cryptocurrency-state/static/media/background.2a72d662f4e7fb9b454b.jpg",
+    "index.html": "/cryptocurrency-state/index.html",
+    "main.df178670.css.map": "/cryptocurrency-state/static/css/main.df178670.css.map",
+    "main.b76205af.js.map": "/cryptocurrency-state/static/js/main.b76205af.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.df178670.css",
+    "static/js/main.b76205af.js"
+  ]
+}
