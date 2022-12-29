@@ -8,55 +8,41 @@ import { Line } from "react-chartjs-2";
 
 const App = () => {
 
+    var x = false;
     const [coinCurrent, setCoinCurrent] = new useState([]);
     const [coinsList, setCoinsList] = new useState([]);
     const [searchText, setSearchText] = new useState("");
-
-    const canvaCoinCourrent_id = document.getElementById("canva_coin_current");
+    const [historicCanvaData, setHistoricCanvaData] = new useState([]);
+    const [listCanva, setListCanva] = new useState([]);
 
     const coinFilter = coinsList.filter((coin) =>
         coin.name.toLowerCase().includes(searchText.toLowerCase()) | coin.symbol.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    const data = {
-        labels: ['Red', 'Orange', 'Blue'],
-        // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
-        datasets: [
-            {
-                label: 'Popularity of colours',
-                data: [55, 23, 96],
-                // you can set indiviual colors for each bar
-                backgroundColor: [
-                    'rgba(255, 255, 255, 0.6)',
-                    'rgba(255, 255, 255, 0.6)',
-                    'rgba(255, 255, 255, 0.6)'
-                ],
-                borderWidth: 1,
-            }
-        ]
-    }
     const [chartData, setChartData] = useState({
-        labels: ['Red', 'Orange', 'Blue'],
-        // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
+        type: 'line',
+        labels: ["1", "2"],
         datasets: [
             {
-                label: 'Popularity of colours',
-                data: [55, 23, 96],
-                // you can set indiviual colors for each bar
-                backgroundColor: [
-                    'rgba(255, 255, 255, 0.6)',
-                    'rgba(255, 255, 255, 0.6)',
-                    'rgba(255, 255, 255, 0.6)'
-                ],
-                borderWidth: 1,
+                label: '# votes',
+                data: [12, 11, 11, 11, 1, 1],
+                borderWidth: 2,
+                fill: true,
+                tension: 0,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgb(115, 192, 192, .2)'
             }
         ]
     });
 
 
     useEffect(() => {
-        DefinecoinList();
-        // DefineCanvaCoin();
+        if (!x) {
+            DefinecoinList();
+            DefineCanvaHistoricList();
+            x = true;
+        }
+
     }, [])
 
     const DefinecoinList = async () => {
@@ -65,43 +51,64 @@ const App = () => {
         setCoinCurrent(list.data[0]);
     }
 
-    const DefineCanvaCoin = () => {
-        // var chartNew = new Chart(canvaCoinCourrent_id, {
-        //      type: 'line',
-        //      data:
-        //      {
-        //          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        //          datasets: {
-        //              label: '# votes',
-        //              data: [12, 11, 11, 11, 1, 1],
-        //              borderWidth: 1,
-        //              fill: true,
-        //              backgroundColor: 'rgb(115, 192, 192, .2)',
-        //              borderColor: 'rgb(75, 192, 192)',
-        //              tension: 0
-        //          }
+    const DefineCanvaHistoricList = async () => {
+        // const month = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        const listFull = await axios.get("https://api.coingecko.com/api/v3/coins/" + ((coinCurrent.length == 0) ? "bitcoin" : coinCurrent.id) + "/market_chart?vs_currency=usd&days=10");
+        
 
-        //      }
-        //  });
+        setHistoricCanvaData(listFull.data);
+        const lol = listFull.data;
+        console.log(lol.prices);
 
-        const ror = new Chart(canvaCoinCourrent_id, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+        var numberAct = -1;
+        lol.prices.forEach((elementPrices) => {
+            
+            var time = new Date(elementPrices[0]);
+            console.log(time.toString());
+            if (numberAct != time.getDay()) {
+                listCanva.push(elementPrices);
+
+                numberAct = time.getDay();
             }
         });
+        setChartData(reloadCanva());
+    }
+    const labelsCanva = (it_label_data)=>{ //it_label_data:    (0:labels)|(1:data)
+        const labeln = [];
+        
+        
+        if(it_label_data == 0)
+        {
+            listCanva.forEach((canvaItem)=>{
+                var getDayCanva = new Date(canvaItem[it_label_data]);
+                labeln.push((getDayCanva.getDay()+1) + "-" + (getDayCanva.getMonth()+1) + "-"+ getDayCanva.getFullYear());
+            });
+        }else if(it_label_data == 1)
+        {
+            listCanva.forEach((canvaItem)=>{
+                labeln.push(canvaItem);
+            });
+        }
+
+
+        return labeln;
+    }
+    const reloadCanva = () => {
+        return {
+            type: 'line',
+            labels: labelsCanva(0),
+            datasets: [
+                {
+                    label: '# votes',
+                    data: labelsCanva(1),
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgb(115, 192, 192, .2)'
+                }
+            ]
+        }
     }
 
     return (
@@ -113,7 +120,7 @@ const App = () => {
                     <span>( {coinCurrent.symbol} )</span>
                 </div>
                 <div className="coin_current_description">
-                    <Line id="canva_coin_current" data={chartData}></Line>
+                    <Line id="canva_coin_current" className="canvaCoin_current" data={chartData} width="700" ></Line>
                     <span>+12</span>
                     <span>-11</span>
                     <span></span>
